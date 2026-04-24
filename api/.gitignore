@@ -1,0 +1,48 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+*.tsbuildinfo
+
+# Secrets (keep .env.example tracked)
+.env
+.env.local
+.env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs & debug
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Test / coverage
+coverage/
+.vitest/
+
+# Vitest cache (under node_modules; ignore if hoisted later)
+**/.vite/
+
+# graphify pipeline output (generated)
+graphify-out/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE / editor (optional — remove lines if you want these committed)
+.idea/
+*.swp
+*.swo
+*~
+
+# Temp
+tmp/
+temp/
+.cache/
+
+package-lock.json
