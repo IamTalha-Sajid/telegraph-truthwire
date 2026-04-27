@@ -10,6 +10,31 @@ import { XPostService } from "./services/xPostService";
 
 export function createApp(config: AppConfig) {
   const app = express();
+  const allowedOrigins = (process.env.FRONTEND_ORIGIN ?? "")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
+  app.use((req, res, next) => {
+    const requestOrigin = req.headers.origin;
+    const allowAnyOrigin = allowedOrigins.length === 0;
+    const allowedOrigin = allowAnyOrigin
+      ? "*"
+      : requestOrigin && allowedOrigins.includes(requestOrigin)
+        ? requestOrigin
+        : allowedOrigins[0];
+
+    res.header("Access-Control-Allow-Origin", allowedOrigin);
+    res.header("Vary", "Origin");
+    res.header("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+    if (req.method === "OPTIONS") {
+      return res.sendStatus(204);
+    }
+
+    next();
+  });
   app.use(express.json());
 
   app.use((req, res, next) => {
