@@ -321,6 +321,58 @@ main.dashboard-main {
   box-shadow: 0 6px 18px -8px rgba(59, 130, 246, 0.8);
 }
 
+.nav-wallet {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.wallet-balances {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.wallet-balance-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(15, 23, 42, 0.55);
+  font-size: 0.8rem;
+  line-height: 1;
+  color: var(--text-primary);
+}
+
+.wallet-balance-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.wallet-balance-value {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.nav-wallet .wallet-adapter-button {
+  height: 38px;
+  padding: 0 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 0.6rem;
+  background: linear-gradient(130deg, rgba(59, 130, 246, 0.95), rgba(139, 92, 246, 0.95));
+  box-shadow: 0 6px 18px -8px rgba(59, 130, 246, 0.8);
+}
+
+.nav-wallet .wallet-adapter-button:not([disabled]):hover {
+  background: linear-gradient(130deg, rgba(96, 165, 250, 1), rgba(167, 139, 250, 1));
+}
+
 @media (max-width: 960px) {
   .landing-main {
     align-items: flex-start;
@@ -331,6 +383,10 @@ main.dashboard-main {
   .top-nav {
     width: calc(100% - 1rem);
     padding: 0.65rem 0.8rem;
+  }
+
+  .wallet-balances {
+    display: none;
   }
 
   .landing-title {

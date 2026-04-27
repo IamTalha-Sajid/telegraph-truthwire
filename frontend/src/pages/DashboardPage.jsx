@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ShieldCheck, Search, ArrowLeft, Bot, CheckCircle, AlertTriangle } from 'lucide-react';
+import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { GlobalMouseTracker } from '../useMousePosition';
+import WalletBalances from '../solana/WalletBalances';
 
 function textAnswerLabel(answer) {
   if (answer === 0) return 'Likely human-written';
@@ -77,9 +79,9 @@ const DashboardPage = () => {
           <ShieldCheck size={28} color="var(--accent-color)" />
           <span>TruthWire</span>
         </Link>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-           <span style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Balance: 12 X402</span>
-           <div className="nav-avatar"></div>
+        <div className="nav-wallet">
+           <WalletBalances />
+           <WalletMultiButton className="wallet-connect-btn" />
         </div>
       </header>
 
