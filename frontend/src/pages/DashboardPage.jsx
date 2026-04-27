@@ -5,6 +5,8 @@ import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { GlobalMouseTracker } from '../useMousePosition';
 import WalletBalances from '../solana/WalletBalances';
 
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/+$/, '');
+
 function textAnswerLabel(answer) {
   if (answer === 0) return 'Likely human-written';
   if (answer === 1) return 'Likely AI-generated';
@@ -36,7 +38,8 @@ const DashboardPage = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/x/verify', {
+      const endpoint = API_BASE_URL ? `${API_BASE_URL}/api/x/verify` : '/api/x/verify';
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url })
