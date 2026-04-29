@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ShieldCheck, Search, ArrowLeft, Bot, CheckCircle, AlertTriangle } from 'lucide-react';
+import { ShieldCheck, Search, ArrowLeft, Bot, CheckCircle, AlertTriangle, Copy, ExternalLink, ShieldCheck as ProofIcon } from 'lucide-react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { GlobalMouseTracker } from '../useMousePosition';
 import WalletBalances from '../solana/WalletBalances';
@@ -11,6 +11,45 @@ function textAnswerLabel(answer) {
   if (answer === 0) return 'Likely human-written';
   if (answer === 1) return 'Likely AI-generated';
   return null;
+}
+
+function shortHash(hash) {
+  if (!hash || hash.length < 16) return hash;
+  return `${hash.slice(0, 8)}…${hash.slice(-8)}`;
+}
+
+function CryptoProofBlock({ label, sublabel, proof }) {
+  const [copied, setCopied] = useState(false);
+  const copy = () => {
+    navigator.clipboard.writeText(proof.txHash).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
+  return (
+    <div className="crypto-proof-row">
+      <div className="crypto-proof-service">
+        <span className="crypto-proof-service-name">{label}</span>
+        <span className="crypto-proof-service-sub">{sublabel}</span>
+      </div>
+      <div className="crypto-proof-tx-block">
+        <a
+          className="crypto-proof-tx-link"
+          href={proof.explorerUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          title={proof.txHash}
+        >
+          {shortHash(proof.txHash)}
+          <ExternalLink size={11} />
+        </a>
+        <button className="crypto-proof-copy-btn" onClick={copy} title="Copy full tx hash" aria-label="Copy tx hash">
+          {copied ? <span className="crypto-proof-copied">Copied!</span> : <Copy size={12} />}
+        </button>
+      </div>
+    </div>
+  );
 }
 
 const DashboardPage = () => {
@@ -264,6 +303,34 @@ const DashboardPage = () => {
                         </>
                       )}
                     </div>
+
+                    {/* Cryptographic Proof */}
+                    {data.payment && (data.payment.bitmind || data.payment.itsai) && (
+                      <div className="crypto-proof-panel">
+                        <div className="crypto-proof-header">
+                          <ProofIcon size={14} />
+                          <span>Cryptographic Proof</span>
+                          <span className="crypto-proof-network-badge">Solana Devnet</span>
+                        </div>
+                        <p className="crypto-proof-desc">
+                          Each analysis call was paid on-chain via x402. Click a transaction to verify on Solana Explorer.
+                        </p>
+                        {data.payment.bitmind && (
+                          <CryptoProofBlock
+                            label="Bitmind"
+                            sublabel="Image Analysis"
+                            proof={data.payment.bitmind}
+                          />
+                        )}
+                        {data.payment.itsai && (
+                          <CryptoProofBlock
+                            label="ItsAI"
+                            sublabel="Text Analysis"
+                            proof={data.payment.itsai}
+                          />
+                        )}
+                      </div>
+                    )}
 
                     {/* Provider Details */}
                     <div style={{ marginTop: '1.5rem' }}>

@@ -704,3 +704,135 @@ main.dashboard-main {
   color: #facc15;
   margin-top: 0.12rem;
 }
+
+/* ── Cryptographic Proof Panel ───────────────────────────────────────────── */
+.crypto-proof-panel {
+  margin-top: 1.25rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(153, 246, 228, 0.22);
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(20, 184, 166, 0.06) 100%);
+  overflow: hidden;
+}
+
+.crypto-proof-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1rem;
+  background: rgba(20, 184, 166, 0.1);
+  border-bottom: 1px solid rgba(153, 246, 228, 0.15);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #5eead4;
+}
+
+.crypto-proof-header svg {
+  color: #2dd4bf;
+  flex-shrink: 0;
+}
+
+.crypto-proof-network-badge {
+  margin-left: auto;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(20, 184, 166, 0.15);
+  border: 1px solid rgba(45, 212, 191, 0.3);
+  color: #2dd4bf;
+}
+
+.crypto-proof-desc {
+  padding: 0.6rem 1rem 0.5rem;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  border-bottom: 1px solid rgba(153, 246, 228, 0.08);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.crypto-proof-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(153, 246, 228, 0.08);
+}
+
+.crypto-proof-row:last-child {
+  border-bottom: none;
+}
+
+.crypto-proof-service {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.crypto-proof-service-name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+.crypto-proof-service-sub {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+.crypto-proof-tx-block {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.crypto-proof-tx-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.78rem;
+  color: #2dd4bf;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  transition: color 0.15s;
+}
+
+.crypto-proof-tx-link:hover {
+  color: #99f6e4;
+  text-decoration: underline;
+}
+
+.crypto-proof-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 0.35rem;
+  border: 1px solid rgba(153, 246, 228, 0.2);
+  background: rgba(20, 184, 166, 0.1);
+  color: #5eead4;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.crypto-proof-copy-btn:hover {
+  background: rgba(20, 184, 166, 0.22);
+  color: #99f6e4;
+}
+
+.crypto-proof-copied {
+  font-size: 0.68rem;
+  color: #4ade80;
+  font-weight: 600;
+  white-space: nowrap;
+}

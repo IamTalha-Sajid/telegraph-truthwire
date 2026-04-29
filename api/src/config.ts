@@ -5,6 +5,8 @@ export interface AppConfig {
   bitmindRequestTimeoutMs: number;
   itsAiSubnetPrefix: string;
   itsAiRequestTimeoutMs: number;
+  // x402 Solana payment — read directly from process.env in x402Fetch.ts
+  solanaNetwork: "devnet" | "mainnet";
 }
 
 export class ConfigError extends Error {
@@ -31,6 +33,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
     bitmindSubnetPrefix: env.BITMIND_SUBNET_PREFIX ?? "/subnet-dispatcher/v1/34",
     bitmindRequestTimeoutMs: parseTimeoutMs(env.BITMIND_REQUEST_TIMEOUT_MS, telegraphTimeout),
     itsAiSubnetPrefix: env.ITSAI_SUBNET_PREFIX ?? "/subnet-dispatcher/v1/32",
-    itsAiRequestTimeoutMs: parseTimeoutMs(env.ITSAI_REQUEST_TIMEOUT_MS, telegraphTimeout)
+    itsAiRequestTimeoutMs: parseTimeoutMs(env.ITSAI_REQUEST_TIMEOUT_MS, telegraphTimeout),
+    solanaNetwork: env.SOLANA_NETWORK === "mainnet" ? "mainnet" : "devnet"
   };
 }

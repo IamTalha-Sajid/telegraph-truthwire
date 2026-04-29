@@ -1,6 +1,7 @@
-import { BitMindClient, BitMindDetectImageResponse } from "../clients/bitmindClient";
-import { ITSAI_MIN_TEXT_LENGTH, ItsAiClient, ItsAiDetectResponse } from "../clients/itsAiClient";
+import { BitMindClient, BitMindClientOptions, BitMindDetectImageResponse } from "../clients/bitmindClient";
+import { ITSAI_MIN_TEXT_LENGTH, ItsAiClient, ItsAiClientOptions, ItsAiDetectResponse } from "../clients/itsAiClient";
 import { FetchMeta, PostMedia, XPostDetails } from "../types";
+import { PaymentCapture, withTxCapture } from "../x402Fetch";
 import { XPostService } from "./xPostService";
 
 export interface ImageVerification {
@@ -41,6 +42,12 @@ export interface VerificationSummary {
   anyAi: boolean | null;
 }
 
+export interface PaymentProof {
+  txHash: string;
+  network: "solana-devnet" | "solana-mainnet";
+  explorerUrl: string;
+}
+
 export interface VerificationResult {
   post: XPostDetails;
   meta: FetchMeta;
@@ -50,17 +57,40 @@ export interface VerificationResult {
     text: TextVerification;
     summary: VerificationSummary;
   };
+  payment?: {
+    bitmind?: PaymentProof;
+    itsai?: PaymentProof;
+  };
 }
 
 export class VerificationService {
   constructor(
     private readonly xPostService: XPostService,
-    private readonly bitmind: BitMindClient,
-    private readonly itsAi: ItsAiClient
+    private readonly bitmindOpts: Omit<BitMindClientOptions, "fetchImpl">,
+    private readonly itsAiOpts: Omit<ItsAiClientOptions, "fetchImpl">,
+    private readonly paymentFetch: typeof fetch,
+    private readonly solanaNetwork: "devnet" | "mainnet" = "devnet"
   ) {}
+
+  private makeProof(capture: PaymentCapture): PaymentProof | undefined {
+    if (!capture.txHash) return undefined;
+    const network: PaymentProof["network"] = this.solanaNetwork === "mainnet" ? "solana-mainnet" : "solana-devnet";
+    const cluster = this.solanaNetwork === "mainnet" ? "" : "?cluster=devnet";
+    return {
+      txHash: capture.txHash,
+      network,
+      explorerUrl: `https://explorer.solana.com/tx/${capture.txHash}${cluster}`
+    };
+  }
 
   async verify(url: string): Promise<VerificationResult> {
     const { post, meta } = await this.xPostService.getPostDetails(url);
+
+    const bitmindCapture: PaymentCapture = { txHash: undefined };
+    const itsaiCapture: PaymentCapture = { txHash: undefined };
+
+    const bitmind = new BitMindClient({ ...this.bitmindOpts, fetchImpl: withTxCapture(this.paymentFetch, bitmindCapture) });
+    const itsAi = new ItsAiClient({ ...this.itsAiOpts, fetchImpl: withTxCapture(this.paymentFetch, itsaiCapture) });
 
     const images: ImageVerification[] = [];
     const skipped: SkippedMedia[] = [];
@@ -79,7 +109,7 @@ export class VerificationService {
       }
 
       try {
-        const result = await this.bitmind.detectImage(media.url);
+        const result = await bitmind.detectImage(media.url);
         images.push({ mediaUrl: media.url, status: "analyzed", result });
       } catch (error) {
         const err = error as { code?: string; message?: string };
@@ -94,7 +124,13 @@ export class VerificationService {
       }
     }
 
-    const text = await this.verifyText(post.text);
+    const text = await this.verifyText(post.text, itsAi);
+
+    const bitmindProof = this.makeProof(bitmindCapture);
+    const itsaiProof = this.makeProof(itsaiCapture);
+    const payment = (bitmindProof || itsaiProof)
+      ? { bitmind: bitmindProof, itsai: itsaiProof }
+      : undefined;
 
     return {
       post,
@@ -104,11 +140,12 @@ export class VerificationService {
         skipped,
         text,
         summary: this.summarize(post, images, skipped, text)
-      }
+      },
+      payment
     };
   }
 
-  private async verifyText(rawText: string): Promise<TextVerification> {
+  private async verifyText(rawText: string, itsAi: ItsAiClient): Promise<TextVerification> {
     const text = rawText.trim();
     const characterCount = text.length;
 
@@ -125,7 +162,7 @@ export class VerificationService {
     }
 
     try {
-      const result = await this.itsAi.detectText(text);
+      const result = await itsAi.detectText(text);
       return { status: "analyzed", characterCount, result };
     } catch (error) {
       const err = error as { code?: string; message?: string };

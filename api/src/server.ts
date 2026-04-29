@@ -9,7 +9,7 @@ if (process.env.DNS_RESULT_ORDER !== "verbatim") {
   dns.setDefaultResultOrder("ipv4first");
 }
 
-function main() {
+async function main() {
   let config;
   try {
     config = loadConfig();
@@ -22,7 +22,7 @@ function main() {
   }
 
   const port = Number(process.env.PORT ?? 3000);
-  const app = createApp(config);
+  const app = await createApp(config);
 
   // Do not pass a listen callback: Express wires that same function to `error` via `once()`,
   // so EADDRINUSE still invokes it and looks like a successful bind while the process exits.

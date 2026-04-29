@@ -1,14 +1,13 @@
 import express from "express";
-import { BitMindClient } from "./clients/bitmindClient";
-import { ItsAiClient } from "./clients/itsAiClient";
 import { AppConfig } from "./config";
 import { VxTwitterPostProvider } from "./providers/vxTwitterPostProvider";
 import { createPostDetailsRoute } from "./routes/postDetailsRoute";
 import { createVerifyRoute } from "./routes/verifyRoute";
 import { VerificationService } from "./services/verificationService";
 import { XPostService } from "./services/xPostService";
+import { createPaymentFetch } from "./x402Fetch";
 
-export function createApp(config: AppConfig) {
+export async function createApp(config: AppConfig) {
   const app = express();
   const allowedOrigins = (process.env.FRONTEND_ORIGIN ?? "")
     .split(",")
@@ -51,19 +50,27 @@ export function createApp(config: AppConfig) {
   });
   const xPostService = new XPostService(xProvider, "vx-twitter");
 
-  const bitmind = new BitMindClient({
+  const paymentFetch = await createPaymentFetch();
+
+  const bitmindOpts = {
     baseUrl: config.telegraphBaseUrl,
     subnetPrefix: config.bitmindSubnetPrefix,
     timeoutMs: config.bitmindRequestTimeoutMs
-  });
+  };
 
-  const itsAi = new ItsAiClient({
+  const itsAiOpts = {
     baseUrl: config.telegraphBaseUrl,
     subnetPrefix: config.itsAiSubnetPrefix,
     timeoutMs: config.itsAiRequestTimeoutMs
-  });
+  };
 
-  const verificationService = new VerificationService(xPostService, bitmind, itsAi);
+  const verificationService = new VerificationService(
+    xPostService,
+    bitmindOpts,
+    itsAiOpts,
+    paymentFetch,
+    config.solanaNetwork
+  );
 
   app.get("/health", (_req, res) => {
     res.status(200).json({ ok: true });
