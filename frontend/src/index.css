@@ -836,3 +836,219 @@ main.dashboard-main {
   font-weight: 600;
   white-space: nowrap;
 }
+
+/* ── Terminal UI ───────────────────────────────────────────── */
+.terminal-container {
+  background: linear-gradient(145deg, rgba(30, 41, 59, 0.6), rgba(15, 23, 42, 0.8));
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1rem;
+  margin-top: 1.5rem;
+  overflow: hidden;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.terminal-header {
+  background: rgba(15, 23, 42, 0.5);
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.terminal-header-title {
+  color: #94a3b8;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.terminal-header-dots {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.terminal-header-dots .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.terminal-header-dots .red { background: #ff5f56; }
+.terminal-header-dots .yellow { background: #ffbd2e; }
+.terminal-header-dots .green { background: #27c93f; }
+
+.terminal-body {
+  padding: 1.25rem;
+  color: #e2e8f0;
+  max-height: 450px;
+  overflow-y: auto;
+}
+
+.terminal-body::-webkit-scrollbar {
+  width: 6px;
+}
+.terminal-body::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+}
+
+.terminal-title {
+  color: #f8fafc;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+}
+
+.terminal-group-header {
+  display: flex;
+  color: #94a3b8;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 0.4rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.terminal-col-time {
+  width: 125px;
+  flex-shrink: 0;
+  padding-top: 0.1rem;
+}
+
+.terminal-time-badge {
+  display: inline-block;
+  padding: 0.25rem 0.6rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+  font-family: 'SFMono-Regular', Consolas, Menlo, monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.terminal-col-group {
+  flex: 1;
+}
+
+.terminal-row {
+  display: flex;
+  margin-bottom: 1rem;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.terminal-col-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  align-items: flex-start;
+}
+
+.terminal-level {
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 0.15rem;
+  color: #ffffff;
+}
+
+.terminal-text {
+  color: #cbd5e1;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  font-weight: 400;
+}
+
+.terminal-cursor {
+  display: inline-block;
+  width: 10px;
+  height: 20px;
+  background: var(--accent-color);
+  animation: blink 1s step-end infinite;
+  margin-top: 0.5rem;
+  border-radius: 2px;
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+
+.terminal-receipt {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.5), rgba(15, 23, 42, 0.8));
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
+}
+
+.receipt-title {
+  text-align: center;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  color: #e2e8f0;
+  letter-spacing: 0.05em;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.receipt-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.6rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+}
+
+.receipt-row:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.receipt-label {
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+
+.receipt-value {
+  color: #f8fafc;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-align: right;
+}
+
+.animate-in {
+  animation: slideUp 0.3s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Link } from 'react-router-dom';
 import { ShieldCheck, Zap, ArrowRight, ShieldAlert } from 'lucide-react';
 import { GlobalMouseTracker } from '../useMousePosition';

@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ShieldCheck, Search, ArrowLeft, Bot, CheckCircle, AlertTriangle, Copy, ExternalLink, ShieldCheck as ProofIcon } from 'lucide-react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { GlobalMouseTracker } from '../useMousePosition';
 import WalletBalances from '../solana/WalletBalances';
+import TerminalFeed from '../components/TerminalFeed';
 
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/+$/, '');
 
@@ -57,6 +58,7 @@ const DashboardPage = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
+  const [terminalFinished, setTerminalFinished] = useState(false);
 
   const validateUrl = (input) => {
     const xRegex = /^(https?:\/\/)?(www\.)?(twitter\.com|x\.com)\/[a-zA-Z0-9_]+\/status\/[0-9]+(\?.*)?$/;
@@ -74,6 +76,7 @@ const DashboardPage = () => {
 
     setData(null);
     setError(null);
+    setTerminalFinished(false);
     setLoading(true);
 
     try {
@@ -183,16 +186,13 @@ const DashboardPage = () => {
           <div className="dashboard-split-right">
             {(data || error || loading) ? (
               <div className={`post-preview visible`}>
-                <h3 style={{ marginBottom: '1rem' }}>Verification Preview</h3>
+                <h3 style={{ marginBottom: '1rem' }}>Live Logic Feed</h3>
                 
-                {loading && !data && !error && (
-                   <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-secondary)' }}>
-                      <Bot size={48} style={{ opacity: 0.5, marginBottom: '1rem', display: 'inline-block' }} />
-                      <p>Running verification pipeline...</p>
-                   </div>
-                )}
+                <TerminalFeed loading={loading} data={data} error={error} onComplete={() => setTerminalFinished(true)} />
 
-                {error && (
+                {terminalFinished && (
+                  <div className="results-container animate-in" style={{ marginTop: '2rem' }}>
+                    {error && (
                   <div style={{ padding: '1rem', background: 'rgba(239, 68, 68, 0.1)', color: '#f87171', borderRadius: '0.5rem', marginBottom: '1rem', border: '1px solid rgba(239,68,68,0.3)' }}>
                     Error: {error}
                   </div>
@@ -402,8 +402,10 @@ const DashboardPage = () => {
                             )}
                           </div>
                        )}
-                    </div>
+                     </div>
                   </div>
+                )}
+                </div>
                 )}
               </div>
             ) : (
